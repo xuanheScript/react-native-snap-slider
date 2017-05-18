@@ -98,7 +98,7 @@ var SnapSlider = React.createClass({
             if (this.refs.slider && this.state.sliderWidth > 0) {
                 var that = this;
                 var w, l;
-                var buffer = 30;//add buffer for the slider 'ball' control
+                var buffer = 25;//add buffer for the slider 'ball' control
                 if(buffer > w){
                     buffer = 0;
                 }
@@ -122,9 +122,16 @@ var SnapSlider = React.createClass({
             <View onLayout={that._getSliderWidth} style={[defaultStyles.container, this.props.containerStyle]}>
                 <Slider ref="slider" {...this.props} style={this._sliderStyle()} onSlidingComplete={(value) => this._onSlidingCompleteCallback(value)} value={this.state.value} />
                 <View style={[defaultStyles.itemWrapper, this.props.itemWrapperStyle]}>
+                    {
+                        this.props.items.map(function(i, j) {
+                            return <Text key={i.value} ref={"t"+j} style={itemStyle} onLayout={that._getItemWidth}>{i.label}</Text>;
+                        })
+                    }
+                </View>
+                <View style={[defaultStyles.itemTrackMark, this.props.itemTrackMarkStyle,{width:this.state.sliderWidth+this.state.sliderLeft+7,left:this.state.sliderLeft}]}>
                 {
                     this.props.items.map(function(i, j) {
-                        return <Text key={i.value} ref={"t"+j} style={itemStyle} onLayout={that._getItemWidth}>{i.label}</Text>;
+                        return <View style={{height:10,width:10,borderRadius:5,backgroundColor:'#EAEAF1'}} key={j}/>
                     })
                 }
                 </View>
@@ -138,11 +145,21 @@ var defaultStyles = StyleSheet.create({
         alignSelf: 'stretch',
     },
     slider: {
+        zIndex : 2,
     },
     itemWrapper: {
         justifyContent: 'space-between',
         alignSelf: 'stretch',
         flexDirection: 'row',
+        flex:1,
+    },
+    itemTrackMark: {
+        justifyContent: 'space-between',
+        alignSelf: 'stretch',
+        flexDirection: 'row',
+        position : 'absolute',
+        top : 15,
+        height:10,
     },
     item: {
     },
